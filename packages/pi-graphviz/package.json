@@ -1,6 +1,6 @@
 {
   "name": "@walterra/pi-graphviz",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Graphviz chart extension for pi coding agent - render DOT diagrams as inline images",
   "type": "module",
   "files": [
