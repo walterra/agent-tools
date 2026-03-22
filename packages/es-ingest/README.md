@@ -1,5 +1,9 @@
 # ES Ingest - Agent Skill
 
+> [!WARNING]
+> **Deprecated:** This skill is no longer maintained in this repository.
+> Use the official Elastic skill instead: **[`elasticsearch-file-ingest`](https://github.com/elastic/agent-skills/tree/main/skills/elasticsearch/elasticsearch-file-ingest)** in [`elastic/agent-skills`](https://github.com/elastic/agent-skills).
+
 Stream-based ingestion and transformation of large data files into Elasticsearch. Built on [node-es-transformer](https://github.com/walterra/node-es-transformer).
 
 ## Quick Start
@@ -7,10 +11,17 @@ Stream-based ingestion and transformation of large data files into Elasticsearch
 ### Install
 
 ```bash
-# Using npx skills (recommended)
-npx skills add walterra/agent-tools --skill es-ingest
+# Install the official replacement skill
+npx skills add elastic/agent-skills --skill elasticsearch-file-ingest
 
-# Or install manually
+# Or browse/copy manually from
+# https://github.com/elastic/agent-skills/tree/main/skills/elasticsearch/elasticsearch-file-ingest
+```
+
+### Legacy Install (deprecated)
+
+```bash
+# Legacy copy from this repo (not maintained)
 git clone https://github.com/walterra/agent-tools.git
 cp -r agent-tools/packages/es-ingest ~/.cursor/skills/
 cd ~/.cursor/skills/es-ingest && npm install
@@ -128,6 +139,15 @@ EOF
 | Codex | `~/.codex/skills/es-ingest` |
 | Pi | `~/.pi/agent/skills/es-ingest` |
 | Copilot | `~/.copilot/skills/es-ingest` |
+
+## Migration Guide
+
+If you currently use `es-ingest` from this repository:
+
+1. Install the official replacement:
+   `npx skills add elastic/agent-skills --skill elasticsearch-file-ingest`
+2. Update any internal docs/scripts that reference `packages/es-ingest`.
+3. Prefer the Elastic-maintained skill for future updates and fixes.
 
 ## Requirements
 

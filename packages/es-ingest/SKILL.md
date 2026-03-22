@@ -1,13 +1,17 @@
 ---
 name: es-ingest
-description: Ingest and transform large data files (CSV/JSON) into Elasticsearch indices. Stream-based processing for files up to 30GB, cross-version migration (ES 8.x ↔ 9.x), custom JavaScript transformations, and reindexing with transforms. Use when you need to load data into Elasticsearch, migrate indices, or transform data during ingestion.
+description: "[DEPRECATED] Legacy ingest skill in this repository. Use elasticsearch-file-ingest from https://github.com/elastic/agent-skills instead."
 metadata:
-  version: "0.0.1"
+  version: "0.0.2"
   author: walterra
   repository: https://github.com/walterra/agent-tools
 ---
 
 # ES Ingest
+
+> [!WARNING]
+> **Deprecated:** This skill is deprecated in `walterra/agent-tools`.
+> Use the official Elastic replacement: **[`elasticsearch-file-ingest`](https://github.com/elastic/agent-skills/tree/main/skills/elasticsearch/elasticsearch-file-ingest)**.
 
 Stream-based ingestion and transformation of large data files into Elasticsearch. Built on [node-es-transformer](https://github.com/walterra/node-es-transformer).
 
