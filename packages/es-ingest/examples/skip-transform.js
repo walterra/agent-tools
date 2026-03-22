@@ -1,8 +1,8 @@
 /**
  * Example transform that conditionally skips documents.
- * 
+ *
  * This validates documents and only indexes valid ones.
- * 
+ *
  * Usage:
  *   ./scripts/ingest.js --file data.json --target validated --transform examples/skip-transform.js
  */

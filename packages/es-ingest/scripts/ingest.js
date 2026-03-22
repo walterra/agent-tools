@@ -31,9 +31,13 @@ function showUsage() {
   console.log('  --delete-index           Delete target index if exists');
   console.log('  --pipeline <name>        Ingest pipeline name');
   console.log('\nProcessing:');
-  console.log('  --transform <file.js>    Transform function (export as default or module.exports)');
+  console.log(
+    '  --transform <file.js>    Transform function (export as default or module.exports)'
+  );
   console.log('  --query <file.json>      Query file to filter source documents');
-  console.log('  --source-format <fmt>    Source format: ndjson|csv|parquet|arrow (default: ndjson)');
+  console.log(
+    '  --source-format <fmt>    Source format: ndjson|csv|parquet|arrow (default: ndjson)'
+  );
   console.log('  --csv-options <file>     CSV parser options (JSON file)');
   console.log('  --skip-header            Skip first line (e.g., CSV header)');
   console.log('\nPerformance:');
@@ -201,17 +205,19 @@ function parseArgs(args) {
         try {
           const transformPath = path.resolve(process.cwd(), next);
           // Dynamic import for ES modules
-          import(transformPath).then(mod => {
-            options.transform = mod.default || mod;
-          }).catch(err => {
-            // Fallback to require for CommonJS
-            try {
-              options.transform = require(transformPath);
-            } catch (requireErr) {
-              console.error(`Error loading transform file ${next}:`, err.message);
-              process.exit(1);
-            }
-          });
+          import(transformPath)
+            .then((mod) => {
+              options.transform = mod.default || mod;
+            })
+            .catch((err) => {
+              // Fallback to require for CommonJS
+              try {
+                options.transform = require(transformPath);
+              } catch (_requireErr) {
+                console.error(`Error loading transform file ${next}:`, err.message);
+                process.exit(1);
+              }
+            });
         } catch (err) {
           console.error(`Error loading transform file ${next}:`, err.message);
           process.exit(1);
@@ -332,7 +338,7 @@ async function main() {
   try {
     console.log('Starting ingestion...');
     console.log(`Target index: ${options.targetIndexName}`);
-    
+
     if (options.fileName) {
       console.log(`Source: File ${options.fileName}`);
     } else {
@@ -345,7 +351,9 @@ async function main() {
     const envTotal = Number.parseInt(process.env.ES_TRANSFORMER_TOTAL_DOCS || '', 10);
     const totalDocs = Number.isFinite(options.totalDocs)
       ? options.totalDocs
-      : (Number.isFinite(envTotal) ? envTotal : null);
+      : Number.isFinite(envTotal)
+        ? envTotal
+        : null;
 
     let processed = 0;
     let lastRate = 0;
@@ -393,9 +401,10 @@ async function main() {
       const processedStr = formatNumber(processed);
       const totalStr = totalDocs ? formatNumber(totalDocs) : null;
       const pct = totalDocs && totalDocs > 0 ? Math.min(processed / totalDocs, 1) * 100 : null;
-      const statusStr = paused && pauseStartedAt
-        ? ` | paused ${Math.round((Date.now() - pauseStartedAt) / 1000)}s`
-        : '';
+      const statusStr =
+        paused && pauseStartedAt
+          ? ` | paused ${Math.round((Date.now() - pauseStartedAt) / 1000)}s`
+          : '';
 
       const columns = progressStream.isTTY ? progressStream.columns : null;
 
@@ -493,7 +502,9 @@ async function main() {
           const msg = `\n⚠️  No docs indexed for ${Math.round(since)}s. Check ES cluster health or bulk errors.\n`;
           progressStream.write(msg);
           if (debugEvents) {
-            progressStream.write(`[event] stall detected at ${new Date().toISOString()} (since ${Math.round(since)}s)\n`);
+            progressStream.write(
+              `[event] stall detected at ${new Date().toISOString()} (since ${Math.round(since)}s)\n`
+            );
           }
         }
       }, 1000);
@@ -509,7 +520,6 @@ async function main() {
       }
       console.log('✓ Ingestion complete!');
     });
-
   } catch (err) {
     console.error('✗ Error:', err.message);
     process.exit(1);

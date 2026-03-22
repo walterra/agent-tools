@@ -1,6 +1,6 @@
 /**
  * Example transform function that enriches documents during ingestion.
- * 
+ *
  * Usage:
  *   ./scripts/ingest.js --file data.json --target my-index --transform examples/transform.js
  */
