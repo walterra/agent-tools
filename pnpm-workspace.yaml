@@ -1,2 +1,7 @@
 packages:
-  - 'packages/*'
+  - 'packages/es-ingest'
+  - 'packages/git-commit'
+  - 'packages/pi-charts'
+  - 'packages/pi-graphviz'
+  - 'packages/post-mortem'
+  - 'packages/searxng-search'
