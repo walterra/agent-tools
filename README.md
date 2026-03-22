@@ -96,12 +96,19 @@ cd ~/.cursor/skills/searxng-search && npm install
 ## Development
 
 ```bash
-# Install dependencies
+# Install dependencies (also installs git hooks via Husky)
 pnpm install
 
-# Build all packages
-pnpm build
+# Fast local fix
+pnpm lint:fix
+
+# Match CI quality gate locally (frozen lockfile + lint + build)
+pnpm verify
 ```
+
+Git hooks:
+- `pre-commit`: runs `pnpm lint`
+- `pre-push`: runs `pnpm verify`
 
 ## License
 
