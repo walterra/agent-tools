@@ -1,5 +1,11 @@
 # @walterra/pi-graphviz
 
+## 0.0.5
+
+### Patch Changes
+
+- [#7](https://github.com/walterra/agent-tools/pull/7) [`7227930`](https://github.com/walterra/agent-tools/commit/72279301816fb93fdd9df0c62dc8cd500d378e6a) - Fix extension compatibility with newer pi releases by updating custom tool execute signatures, adding `promptSnippet` for default tool prompt visibility, hardening temporary file naming for parallel tool execution, and documenting compatibility testing with pi 0.62.0 in package READMEs.
+
 ## 0.0.4
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@walterra/pi-charts",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Vega-Lite chart extension for pi coding agent - render data visualizations as inline images",
   "type": "module",
   "files": [
