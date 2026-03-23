@@ -10,6 +10,10 @@ pi install npm:@walterra/pi-graphviz
 
 This installs the package globally and adds it to your pi settings.
 
+## Compatibility
+
+- Tested with `pi` **0.62.0**
+
 ## Features
 
 - **DOT Language**: Full support for Graphviz DOT syntax

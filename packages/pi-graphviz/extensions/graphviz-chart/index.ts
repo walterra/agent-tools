@@ -73,6 +73,7 @@ digraph G {
 \`\`\`
 
 Reference: https://graphviz.org/doc/info/lang.html`,
+    promptSnippet: 'Render Graphviz DOT graphs and diagrams as PNG/SVG images.',
     parameters: Type.Object({
       dot: Type.String({
         description: 'Graphviz DOT specification (complete graph definition)',
@@ -101,7 +102,7 @@ Reference: https://graphviz.org/doc/info/lang.html`,
       ),
     }),
 
-    async execute(_toolCallId, params, _onUpdate, _ctx, signal) {
+    async execute(_toolCallId, params, signal, _onUpdate, _ctx) {
       const {
         dot,
         engine = 'dot',
@@ -219,12 +220,11 @@ Reference: https://graphviz.org/doc/info/lang.html`,
           }
         }
 
-        const tmpDot = join(tmpdir(), `graphviz-${Date.now()}.dot`);
-        const tmpOutput = join(tmpdir(), `graphviz-${Date.now()}.${outputFormat}`);
+        const tmpNonce = `${Date.now()}-${process.pid}-${Math.random().toString(36).slice(2)}`;
+        const tmpDot = join(tmpdir(), `graphviz-${tmpNonce}.dot`);
+        const tmpOutput = join(tmpdir(), `graphviz-${tmpNonce}.${outputFormat}`);
         // Always generate PNG for terminal display
-        const tmpPng = isSvgOutput
-          ? join(tmpdir(), `graphviz-${Date.now()}-display.png`)
-          : tmpOutput;
+        const tmpPng = isSvgOutput ? join(tmpdir(), `graphviz-${tmpNonce}-display.png`) : tmpOutput;
 
         // Write DOT file
         writeFileSync(tmpDot, dot);

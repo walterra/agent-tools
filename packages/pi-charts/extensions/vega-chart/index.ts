@@ -64,6 +64,7 @@ Example spec structure:
 }
 
 Reference: https://vega.github.io/vega-lite/docs/`,
+    promptSnippet: 'Render Vega-Lite JSON specs as PNG charts from inline data or TSV.',
     parameters: Type.Object({
       spec: Type.String({
         description:
@@ -83,7 +84,7 @@ Reference: https://vega.github.io/vega-lite/docs/`,
       ),
     }),
 
-    async execute(_toolCallId, params, _onUpdate, _ctx, signal) {
+    async execute(_toolCallId, params, signal, _onUpdate, _ctx) {
       const {
         spec,
         tsv_data,
@@ -228,9 +229,10 @@ Reference: https://vega.github.io/vega-lite/docs/`,
         if (!vegaSpec.width) vegaSpec.width = width;
         if (!vegaSpec.height) vegaSpec.height = height;
 
-        const tmpSpec = join(tmpdir(), `vega-spec-${Date.now()}.json`);
-        const tmpTsv = join(tmpdir(), `vega-data-${Date.now()}.tsv`);
-        const tmpPng = join(tmpdir(), `vega-chart-${Date.now()}.png`);
+        const tmpNonce = `${Date.now()}-${process.pid}-${Math.random().toString(36).slice(2)}`;
+        const tmpSpec = join(tmpdir(), `vega-spec-${tmpNonce}.json`);
+        const tmpTsv = join(tmpdir(), `vega-data-${tmpNonce}.tsv`);
+        const tmpPng = join(tmpdir(), `vega-chart-${tmpNonce}.png`);
 
         // If TSV data provided, we'll load it in Python
         if (tsv_data) {

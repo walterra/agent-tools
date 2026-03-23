@@ -10,6 +10,10 @@ pi install npm:@walterra/pi-charts
 
 This installs the package globally and adds it to your pi settings.
 
+## Compatibility
+
+- Tested with `pi` **0.62.0**
+
 ## Features
 
 - **Declarative Visualizations**: Use Vega-Lite JSON specs to describe charts
