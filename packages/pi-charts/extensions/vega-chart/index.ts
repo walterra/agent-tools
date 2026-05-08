@@ -121,12 +121,16 @@ Reference: https://vega.github.io/vega-lite/docs/`,
       };
 
       try {
+        // Determine the Python binary name (cross-platform)
+        const pythonBin = process.platform === 'win32' ? 'python' : 'python3';
+
         // Check Python and dependencies, auto-install if needed using uv
         const ensureDependencies = (): { success: boolean; error?: string } => {
-          // Check if uv is available
+          // Check if uv is available (cross-platform: which on Unix, where on Windows)
           let hasUv = false;
           try {
-            execSync('which uv', { encoding: 'utf-8' });
+            const checkCmd = process.platform === 'win32' ? 'where uv' : 'which uv';
+            execSync(checkCmd, { encoding: 'utf-8' });
             hasUv = true;
           } catch {
             // uv not available, try to install it
@@ -143,20 +147,7 @@ Reference: https://vega.github.io/vega-lite/docs/`,
                   stdio: 'inherit',
                 });
               }
-              // Source the updated PATH or check common install locations
-              const uvPaths = [
-                `${process.env.HOME}/.local/bin/uv`,
-                `${process.env.HOME}/.cargo/bin/uv`,
-                '/usr/local/bin/uv',
-              ];
-              hasUv = uvPaths.some((p) => {
-                try {
-                  execSync(`${p} --version`, { encoding: 'utf-8' });
-                  return true;
-                } catch {
-                  return false;
-                }
-              });
+              hasUv = true;
             } catch {
               // uv install failed
             }
@@ -173,7 +164,7 @@ Reference: https://vega.github.io/vega-lite/docs/`,
           // Use uv to run Python with the required packages
           // uv will auto-install Python and packages as needed
           const checkCmd =
-            'uv run --with altair --with pandas --with vl-convert-python python3 -c "import altair; import pandas; import vl_convert"';
+            `uv run --with altair --with pandas --with vl-convert-python ${pythonBin} -c "import altair; import pandas; import vl_convert"`;
           try {
             execSync(checkCmd, { encoding: 'utf-8', stdio: 'pipe' });
             return { success: true };
@@ -181,7 +172,7 @@ Reference: https://vega.github.io/vega-lite/docs/`,
             const errorMsg = getErrorMessage(err);
             return {
               success: false,
-              error: `Failed to setup Python environment with uv.\nPlease run manually: uv run --with altair --with pandas --with vl-convert-python python3\n\nError: ${errorMsg}`,
+              error: `Failed to setup Python environment with uv.\nPlease run manually: uv run --with altair --with pandas --with vl-convert-python python\n\nError: ${errorMsg}`,
             };
           }
         };
@@ -267,7 +258,7 @@ print('OK')
 `;
 
         const result = execSync(
-          `uv run --with altair --with pandas --with vl-convert-python python3 -c "${pythonScript.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`,
+          `uv run --with altair --with pandas --with vl-convert-python ${pythonBin} -c "${pythonScript.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`,
           {
             encoding: 'utf-8',
             timeout: 60000, // Longer timeout for first run when uv downloads packages
