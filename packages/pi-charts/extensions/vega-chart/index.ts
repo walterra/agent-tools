@@ -15,8 +15,8 @@ import { readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { ExtensionAPI } from '@mariozechner/pi-coding-agent';
-import { Type } from '@sinclair/typebox';
+import { Type } from '@earendil-works/pi-ai';
+import type { ExtensionAPI } from '@earendil-works/pi-coding-agent';
 
 // Compute reference path using ESM import.meta.url
 const VEGA_REFERENCE_PATH = join(dirname(fileURLToPath(import.meta.url)), 'vega-lite-reference.md');

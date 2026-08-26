@@ -34,10 +34,7 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@mariozechner/pi-coding-agent": "*"
-  },
-  "dependencies": {
-    "@sinclair/typebox": "^0.32.0"
+    "@earendil-works/pi-coding-agent": "*"
   },
   "devDependencies": {
     "@types/node": "^20.0.0"

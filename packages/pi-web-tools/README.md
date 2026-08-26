@@ -5,6 +5,10 @@ Web research extension for [pi coding agent](https://github.com/badlogic/pi-mono
 - `web_search`: paid Kagi Search API
 - `web_fetch`: Jina Reader Markdown extraction
 
+## Compatibility
+
+- Tested with `pi` **0.84.3** (`@earendil-works/pi-coding-agent`)
+
 ## Configuration
 
 Set credentials before starting Pi:

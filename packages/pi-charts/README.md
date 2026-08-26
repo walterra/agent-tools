@@ -12,7 +12,7 @@ This installs the package globally and adds it to your pi settings.
 
 ## Compatibility
 
-- Tested with `pi` **0.62.0**
+- Tested with `pi` **0.84.3** (`@earendil-works/pi-coding-agent`)
 
 ## Features
 
