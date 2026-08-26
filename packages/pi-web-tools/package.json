@@ -1,0 +1,38 @@
+{
+  "name": "@walterra/pi-web-tools",
+  "version": "0.0.1",
+  "description": "Web search and page extraction tools for pi using Kagi Search and Jina Reader",
+  "type": "module",
+  "files": [
+    "extensions",
+    "README.md"
+  ],
+  "pi": {
+    "extensions": [
+      "./extensions/web-tools/index.ts"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/walterra/agent-tools.git",
+    "directory": "packages/pi-web-tools"
+  },
+  "keywords": [
+    "pi-package",
+    "pi",
+    "pi-coding-agent",
+    "extension",
+    "web-search",
+    "kagi",
+    "jina-reader",
+    "web-fetch"
+  ],
+  "author": "walterra",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  }
+}
