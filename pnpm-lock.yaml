@@ -35,6 +35,9 @@ importers:
 
   packages/pi-charts:
     dependencies:
+      '@earendil-works/pi-ai':
+        specifier: '*'
+        version: 0.84.3(ws@8.19.0)(zod@3.25.76)
       '@earendil-works/pi-coding-agent':
         specifier: '*'
         version: 0.84.3(ws@8.19.0)(zod@3.25.76)
@@ -45,6 +48,9 @@ importers:
 
   packages/pi-graphviz:
     dependencies:
+      '@earendil-works/pi-ai':
+        specifier: '*'
+        version: 0.84.3(ws@8.19.0)(zod@3.25.76)
       '@earendil-works/pi-coding-agent':
         specifier: '*'
         version: 0.84.3(ws@8.19.0)(zod@3.25.76)
@@ -55,6 +61,9 @@ importers:
 
   packages/pi-web-tools:
     dependencies:
+      '@earendil-works/pi-ai':
+        specifier: '*'
+        version: 0.84.3(ws@8.19.0)(zod@3.25.76)
       '@earendil-works/pi-coding-agent':
         specifier: '*'
         version: 0.84.3(ws@8.19.0)(zod@3.25.76)
@@ -2094,7 +2103,7 @@ snapshots:
       '@aws-sdk/types': 3.974.5
       '@smithy/core': 3.33.3
       '@smithy/fetch-http-handler': 5.7.2
-      '@smithy/node-http-handler': 4.7.3
+      '@smithy/node-http-handler': 4.11.3
       '@smithy/types': 4.17.2
       tslib: 2.8.1
 
