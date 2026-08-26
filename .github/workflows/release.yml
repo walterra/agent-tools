@@ -36,8 +36,10 @@ jobs:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Upgrade npm for OIDC support
-        run: npm install -g npm@latest
+      # Changesets 2 invokes `pnpm publish --no-git-checks`. npm 12 rejects the
+      # forwarded config flag, while npm 11 supports OIDC and tolerates it.
+      - name: Install OIDC-compatible npm
+        run: npm install -g npm@11.5.1
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4

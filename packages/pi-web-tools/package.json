@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/walterra/agent-tools.git",
+    "url": "git+https://github.com/walterra/agent-tools.git",
     "directory": "packages/pi-web-tools"
   },
   "keywords": [
