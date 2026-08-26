@@ -10,8 +10,8 @@
  * - Data-driven: Inline data or separate TSV input
  */
 
-import { execSync } from 'node:child_process';
-import { readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { execFileSync, execSync } from 'node:child_process';
+import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -121,73 +121,99 @@ Reference: https://vega.github.io/vega-lite/docs/`,
       };
 
       try {
-        // Check Python and dependencies, auto-install if needed using uv
-        const ensureDependencies = (): { success: boolean; error?: string } => {
-          // Check if uv is available
-          let hasUv = false;
+        const findUvExecutable = (): string | undefined => {
           try {
-            execSync('which uv', { encoding: 'utf-8' });
-            hasUv = true;
+            const locator = process.platform === 'win32' ? 'where.exe' : 'which';
+            const located = execFileSync(locator, ['uv'], { encoding: 'utf-8' })
+              .split(/\r?\n/)
+              .find(Boolean);
+            if (located) return located.trim();
           } catch {
-            // uv not available, try to install it
-            const platform = process.platform;
+            // Fall through to installer default locations.
+          }
+
+          const home = process.env.USERPROFILE ?? process.env.HOME;
+          const executable = process.platform === 'win32' ? 'uv.exe' : 'uv';
+          const candidates = [
+            home ? join(home, '.local', 'bin', executable) : undefined,
+            home ? join(home, '.cargo', 'bin', executable) : undefined,
+            process.platform === 'win32' && process.env.LOCALAPPDATA
+              ? join(process.env.LOCALAPPDATA, 'Programs', 'uv', executable)
+              : undefined,
+            process.platform !== 'win32' ? '/usr/local/bin/uv' : undefined,
+          ];
+          return candidates.find((candidate): candidate is string =>
+            Boolean(candidate && existsSync(candidate))
+          );
+        };
+
+        // Check Python and dependencies, auto-install if needed using uv.
+        const ensureDependencies = (): { uvExecutable?: string; error?: string } => {
+          let uvExecutable = findUvExecutable();
+          if (!uvExecutable) {
             try {
-              if (platform === 'win32') {
-                execSync('powershell -c "irm https://astral.sh/uv/install.ps1 | iex"', {
-                  encoding: 'utf-8',
-                  stdio: 'inherit',
-                });
+              if (process.platform === 'win32') {
+                execFileSync(
+                  'powershell.exe',
+                  [
+                    '-NoProfile',
+                    '-ExecutionPolicy',
+                    'Bypass',
+                    '-Command',
+                    'irm https://astral.sh/uv/install.ps1 | iex',
+                  ],
+                  { encoding: 'utf-8', stdio: 'inherit' }
+                );
               } else {
                 execSync('curl -LsSf https://astral.sh/uv/install.sh | sh', {
                   encoding: 'utf-8',
                   stdio: 'inherit',
                 });
               }
-              // Source the updated PATH or check common install locations
-              const uvPaths = [
-                `${process.env.HOME}/.local/bin/uv`,
-                `${process.env.HOME}/.cargo/bin/uv`,
-                '/usr/local/bin/uv',
-              ];
-              hasUv = uvPaths.some((p) => {
-                try {
-                  execSync(`${p} --version`, { encoding: 'utf-8' });
-                  return true;
-                } catch {
-                  return false;
-                }
-              });
+              uvExecutable = findUvExecutable();
             } catch {
-              // uv install failed
+              // Report the actionable installation error below.
             }
           }
 
-          if (!hasUv) {
+          if (!uvExecutable) {
+            const installCommand =
+              process.platform === 'win32'
+                ? 'powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"'
+                : 'curl -LsSf https://astral.sh/uv/install.sh | sh';
             return {
-              success: false,
-              error:
-                'uv (Python package manager) not found and auto-install failed.\nPlease install uv: curl -LsSf https://astral.sh/uv/install.sh | sh',
+              error: `uv (Python package manager) not found and auto-install failed.\nPlease install uv: ${installCommand}`,
             };
           }
 
-          // Use uv to run Python with the required packages
-          // uv will auto-install Python and packages as needed
-          const checkCmd =
-            'uv run --with altair --with pandas --with vl-convert-python python3 -c "import altair; import pandas; import vl_convert"';
           try {
-            execSync(checkCmd, { encoding: 'utf-8', stdio: 'pipe' });
-            return { success: true };
+            execFileSync(
+              uvExecutable,
+              [
+                'run',
+                '--with',
+                'altair',
+                '--with',
+                'pandas',
+                '--with',
+                'vl-convert-python',
+                'python',
+                '-c',
+                'import altair; import pandas; import vl_convert',
+              ],
+              { encoding: 'utf-8', stdio: 'pipe' }
+            );
+            return { uvExecutable };
           } catch (err: unknown) {
             const errorMsg = getErrorMessage(err);
             return {
-              success: false,
-              error: `Failed to setup Python environment with uv.\nPlease run manually: uv run --with altair --with pandas --with vl-convert-python python3\n\nError: ${errorMsg}`,
+              error: `Failed to setup Python environment with uv.\nPlease run manually: uv run --with altair --with pandas --with vl-convert-python python\n\nError: ${errorMsg}`,
             };
           }
         };
 
         const deps = ensureDependencies();
-        if (!deps.success) {
+        if (!deps.uvExecutable) {
           const errorText = deps.error ?? 'Dependencies not installed';
           return {
             content: [{ type: 'text', text: errorText }],
@@ -233,6 +259,7 @@ Reference: https://vega.github.io/vega-lite/docs/`,
         const tmpSpec = join(tmpdir(), `vega-spec-${tmpNonce}.json`);
         const tmpTsv = join(tmpdir(), `vega-data-${tmpNonce}.tsv`);
         const tmpPng = join(tmpdir(), `vega-chart-${tmpNonce}.png`);
+        const tmpScript = join(tmpdir(), `vega-render-${tmpNonce}.py`);
 
         // If TSV data provided, we'll load it in Python
         if (tsv_data) {
@@ -247,12 +274,17 @@ import altair as alt
 import pandas as pd
 import json
 
+import sys
+
+# Paths are passed as arguments to avoid shell and source-code quoting issues.
+spec_path, output_path, tsv_path = sys.argv[1:4]
+
 # Load the Vega-Lite spec
-with open('${tmpSpec}', 'r') as f:
+with open(spec_path, 'r') as f:
     spec = json.load(f)
 
 # If TSV data provided, load it and inject into spec
-tsv_path = ${tsv_data ? `'${tmpTsv}'` : 'None'}
+tsv_path = tsv_path or None
 if tsv_path:
     df = pd.read_csv(tsv_path, sep='\\t')
     # Convert DataFrame to list of dicts for Vega-Lite
@@ -262,12 +294,27 @@ if tsv_path:
 chart = alt.Chart.from_dict(spec)
 
 # Save as PNG with retina scale
-chart.save('${tmpPng}', scale_factor=2)
+chart.save(output_path, scale_factor=2)
 print('OK')
 `;
+        writeFileSync(tmpScript, pythonScript);
 
-        const result = execSync(
-          `uv run --with altair --with pandas --with vl-convert-python python3 -c "${pythonScript.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`,
+        const result = execFileSync(
+          deps.uvExecutable,
+          [
+            'run',
+            '--with',
+            'altair',
+            '--with',
+            'pandas',
+            '--with',
+            'vl-convert-python',
+            'python',
+            tmpScript,
+            tmpSpec,
+            tmpPng,
+            tsv_data ? tmpTsv : '',
+          ],
           {
             encoding: 'utf-8',
             timeout: 60000, // Longer timeout for first run when uv downloads packages
@@ -308,6 +355,9 @@ print('OK')
         } catch {}
         try {
           unlinkSync(tmpPng);
+        } catch {}
+        try {
+          unlinkSync(tmpScript);
         } catch {}
 
         const dataPoints = tsv_data
