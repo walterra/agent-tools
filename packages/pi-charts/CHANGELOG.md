@@ -1,5 +1,13 @@
 # @walterra/pi-charts
 
+## 0.0.6
+
+### Patch Changes
+
+- [`c30d916`](https://github.com/walterra/agent-tools/commit/c30d916e157f605ff52bf6a67e85ade0fc4b3f1a) - Fix Vega-Lite chart rendering on Windows by using cross-platform uv discovery, uv-managed Python, and shell-safe process argument handling.
+
+- [`c52135e`](https://github.com/walterra/agent-tools/commit/c52135e38f2b23f55a47d202aad1aa63e97093a5) - Migrate all pi extensions to the current `@earendil-works` package scope and Pi API exports.
+
 ## 0.0.5
 
 ### Patch Changes
