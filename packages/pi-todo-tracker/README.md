@@ -105,10 +105,6 @@ The server is for you, on your machine.
 
 Other local processes that can read the page can read the token. Do not run the server on a shared machine you do not trust.
 
-## Coexisting with other trackers
-
-This package registers `todo_tracker`, `/todo-tracker` and `/tt`. It does not use the names `tracker` or `/tracker`, so it can be installed next to [`@ftrdotdev/pi-tracker`](https://pi.dev/packages/@ftrdotdev/pi-tracker) and other todo extensions. Two trackers in one session still means two lists, so pick one per project.
-
 ## Limitations
 
 - Two processes changing the same tracker within a few milliseconds can lose one update. Writes are atomic, so files are never corrupted.
