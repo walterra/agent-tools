@@ -10,7 +10,8 @@
   "pi": {
     "extensions": [
       "./extensions/todo-tracker/index.ts"
-    ]
+    ],
+    "image": "https://raw.githubusercontent.com/walterra/agent-tools/main/packages/pi-todo-tracker/assets/board.png"
   },
   "scripts": {
     "test": "node --experimental-strip-types --test test/*.test.ts",
