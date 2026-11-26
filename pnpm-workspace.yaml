@@ -3,6 +3,7 @@ packages:
   - 'packages/git-commit'
   - 'packages/pi-charts'
   - 'packages/pi-graphviz'
+  - 'packages/pi-todo-tracker'
   - 'packages/pi-web-tools'
   - 'packages/post-mortem'
   - 'packages/searxng-search'
