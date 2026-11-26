@@ -10,6 +10,7 @@ Agent tooling packages - pi extensions, agent skills, and more.
 |---------|-------------|---------|
 | [@walterra/pi-charts](./packages/pi-charts) | Vega-Lite chart extension for pi | `pi install npm:@walterra/pi-charts` |
 | [@walterra/pi-graphviz](./packages/pi-graphviz) | Graphviz DOT diagram extension for pi | `pi install npm:@walterra/pi-graphviz` |
+| [@walterra/pi-todo-tracker](./packages/pi-todo-tracker) | Todo tracker for pi with a live web board across sessions and projects | `pi install npm:@walterra/pi-todo-tracker` |
 | [@walterra/pi-web-tools](./packages/pi-web-tools) | Kagi web search and Jina Reader page extraction for pi | `pi install npm:@walterra/pi-web-tools` |
 
 ### Agent Skills
