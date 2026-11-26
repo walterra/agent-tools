@@ -1,6 +1,6 @@
 {
   "name": "@walterra/pi-todo-tracker",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Todo tracker for pi coding agent - shared checklists with a live web board, across sessions and projects",
   "type": "module",
   "files": [
