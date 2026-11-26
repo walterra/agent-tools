@@ -1,5 +1,11 @@
 # @walterra/pi-todo-tracker
 
+## 0.1.1
+
+### Patch Changes
+
+- [#14](https://github.com/walterra/agent-tools/pull/14) [`89dcd9c`](https://github.com/walterra/agent-tools/commit/89dcd9c94c070e58ab882563ad9f61f4293b674d) - Add a gallery preview image to the package metadata.
+
 ## 0.1.0
 
 ### Minor Changes
